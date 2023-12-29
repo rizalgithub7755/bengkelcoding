@@ -1,3 +1,8 @@
+<?php
+session_start();
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,9 +18,11 @@
             Sistem Informasi Poliklinik
         </a>
         <button class="navbar-toggler"
-                type="button" data-bs-toggle="collapse"
+                type="button"
+                data-bs-toggle="collapse"
                 data-bs-target="#navbarNavDropdown"
-                aria-controls="navbarNavDropdown" aria-expanded="false"
+                aria-controls="navbarNavDropdown"
+                aria-expanded="false"
                 aria-label="Toggle navigation">
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
@@ -26,10 +33,10 @@
                     </a>
                 </li>
                 <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    Data Master
-                </a>
+                    <a class="nav-link dropdown-toggle" href="#" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Data Master
+                    </a>
                     <ul class="dropdown-menu">
                         <li>
                             <a class="dropdown-item" href="dokter.php?page=dokter">
@@ -41,6 +48,11 @@
                                 Pasien
                             </a>
                         </li>
+                        <li>
+                            <a class="dropdown-item" href="obat.php?page=obat">
+                                Obat
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item">
@@ -50,7 +62,7 @@
                 </li>
             </ul>
         </div>
-        <!-- Add the "Logout" button to the top-right -->
+        
         <?php
         session_start();
         if (isset($_SESSION['username'])) {
@@ -61,7 +73,7 @@
 </nav>
 
 <div class="container">
-    <form class="form row" method="POST" action="" name="myForm" onsubmit="return validate()">
+    <form class="form row" method="POST" action="" name="myForm" onsubmit="return validate();">
         <?php
         include 'koneksi.php';
 
@@ -127,6 +139,7 @@
                 ?>
             </select>
         </div>
+        
         <div class="col mb-2">
             <label for="inputNo_hp" class="form-label fw-bold">
                 Tanggal Periksa
@@ -139,19 +152,13 @@
             </label>
             <input type="text" class="form-control" name="catatan" id="inputCatatan" placeholder="Catatan" value="<?php echo $catatan; ?>">
         </div>
-        <div class="col mb-2">
-            <label for="inputNo_hp" class="form-label fw-bold">
-                Obat
-            </label>
-            <input type="text" class="form-control" name="obat" id="inputObat" placeholder="Obat" value="<?php echo $obat; ?>">
-        </div>
+
         <div class="col">
             <button type="submit" class="btn btn-primary rounded-pill px-3" name="simpan">Simpan</button>
         </div>
     </form>
-    <!-- Table-->
+
     <table class="table table-hover">
-        <!--thead atau baris judul-->
         <thead>
         <tr>
             <th scope="col">#</th>
@@ -159,75 +166,70 @@
             <th scope="col">Nama Dokter</th>
             <th scope="col">Tanggal Periksa</th>
             <th scope="col">Catatan</th>
-            <th scope="col">Obat</th>
+          
             <th scope="col">Aksi</th>
         </tr>
         </thead>
-        <!--tbody berisi isi tabel sesuai dengan judul atau head-->
         <tbody>
-        </div>
-        <form method="post" action="periksa.php">
-            <?php
-            $result = mysqli_query($mysqli, "SELECT pr.*,d.nama as 'nama_dokter', p.nama as 'nama_pasien' FROM periksa pr LEFT JOIN dokter d ON (pr.id_dokter=d.id) LEFT JOIN pasien p ON (pr.id_pasien=p.id) ORDER BY pr.tgl_periksa DESC");
-            $no = 1;
-            while ($data = mysqli_fetch_array($result)) {
-                ?>
-                <tr>
-                    <td><?php echo $no++ ?></td>
-                    <td><?php echo $data['nama_pasien'] ?></td>
-                    <td><?php echo $data['nama_dokter'] ?></td>
-                    <td><?php echo $data['tgl_periksa'] ?></td>
-                    <td><?php echo $data['catatan'] ?></td>
-                    <td><?php echo $data['obat'] ?></td>
-                    <td>
-                        <a class="btn btn-success rounded-pill px-3"
-                           href="periksa.php?page=periksa&id=<?php echo $data['id'] ?>">Ubah</a>
-                        <a class="btn btn-danger rounded-pill px-3"
-                           href="periksa.php?page=periksa&id=<?php echo $data['id'] ?>&aksi=hapus">Hapus</a>
-                    </td>
-                </tr>
-                <?php
-            }
-            ?>
-        </form>
         <?php
-        if (isset($_POST['simpan'])) {
-
-            $id_pasien = $_POST['id_pasien'];
-            $id_dokter = $_POST['id_dokter'];
-            $tgl_periksa = $_POST['tgl_periksa'];
-            $catatan = $_POST['catatan'];
-            $obat = $_POST['obat'];
-
-            if (!isset($_GET['id'])) {
-                $query = "INSERT INTO periksa (id_pasien, id_dokter, tgl_periksa, catatan, obat)
-        VALUES ('$id_pasien', '$id_dokter', '$tgl_periksa', '$catatan', '$obat')";
-            } else {
-                $query = "UPDATE `periksa` SET `id_pasien` = '$id_pasien', `id_dokter` = '$id_dokter', `tgl_periksa` = '$tgl_periksa', `catatan` = '$catatan', `obat` = '$obat'  WHERE `id` = '" . $_GET['id'] . "'";
-            }
-            $result = mysqli_query($mysqli, $query);
-            echo "<script> 
-            document.location='periksa.php';
-            </script>";
-        }
-
-        if (isset($_GET['aksi'])) {
-            if ($_GET['aksi'] == 'hapus') {
-                $hapus = mysqli_query($mysqli, "DELETE FROM periksa WHERE id = '" . $_GET['id'] . "'");
-            } else if ($_GET['aksi'] == 'ubah_status') {
-                $ubah_status = mysqli_query($mysqli, "UPDATE periksa SET 
-                                        status = '" . $_GET['status'] . "' 
-                                        WHERE
-                                        id = '" . $_GET['id'] . "'");
-            }
-
-            echo "<script> 
-            document.location='periksa.php';
-            </script>";
+        $result = mysqli_query($mysqli, "SELECT pr.*,d.nama as 'nama_dokter', p.nama as 'nama_pasien' FROM periksa pr LEFT JOIN dokter d ON (pr.id_dokter=d.id) LEFT JOIN pasien p ON (pr.id_pasien=p.id) ORDER BY pr.tgl_periksa DESC");
+        $no = 1;
+        while ($data = mysqli_fetch_array($result)) {
+            ?>
+            <tr>
+                <td><?php echo $no++ ?></td>
+                <td><?php echo $data['nama_pasien'] ?></td>
+                <td><?php echo $data['nama_dokter'] ?></td>
+                <td><?php echo $data['tgl_periksa'] ?></td>
+                <td><?php echo $data['catatan'] ?></td>
+                <td>
+                    <a class="btn btn-success rounded-pill px-3" href="periksa.php?page=periksa&id=<?php echo $data['id'] ?>">Ubah</a>
+                    <a class="btn btn-danger rounded-pill px-3" href="periksa.php?page=periksa&id=<?php echo $data['id'] ?>&aksi=hapus">Hapus</a>
+                    <a class="btn btn-primary rounded-pill px-3" href="detail_periksa.php?id=<?php echo $data['id'] ?>">Tambah Obat</a>
+                </td>
+            </tr>
+            <?php
         }
         ?>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-                crossorigin="anonymous"></script>
+        </tbody>
+    </table>
+</div>
+
+<?php
+if (isset($_POST['simpan'])) {
+    $id_pasien = $_POST['id_pasien'];
+    $id_dokter = $_POST['id_dokter'];
+    $tgl_periksa = $_POST['tgl_periksa'];
+    $catatan = $_POST['catatan'];
+
+
+    if (!isset($_GET['id'])) {
+        $query = "INSERT INTO periksa (id_pasien, id_dokter, tgl_periksa, catatan)
+            VALUES ('$id_pasien', '$id_dokter', '$tgl_periksa', '$catatan')";
+    } else {
+        $query = "UPDATE `periksa` SET `id_pasien` = '$id_pasien', `id_dokter` = '$id_dokter', `tgl_periksa` = '$tgl_periksa', `catatan` = '$catatan'  WHERE `id` = '" . $_GET['id'] . "'";
+    }
+    $result = mysqli_query($mysqli, $query);
+    echo "<script> 
+            document.location='periksa.php';
+            </script>";
+}
+
+if (isset($_GET['aksi'])) {
+    if ($_GET['aksi'] == 'hapus') {
+        $hapus = mysqli_query($mysqli, "DELETE FROM periksa WHERE id = '" . $_GET['id'] . "'");
+    } else if ($_GET['aksi'] == 'ubah_status') {
+        $ubah_status = mysqli_query($mysqli, "UPDATE periksa SET 
+                                status = '" . $_GET['status'] . "' 
+                                WHERE
+                                id = '" . $_GET['id'] . "'");
+    }
+    echo "<script> 
+            document.location='periksa.php';
+            </script>";
+}
+?>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 </html>

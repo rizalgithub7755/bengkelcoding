@@ -1,3 +1,24 @@
+<?php
+session_start();
+include 'koneksi.php';
+
+$nama = '';
+$alamat = '';
+$no_hp = '';
+
+if (isset($_GET['id'])) {
+    $ambil = mysqli_query($mysqli, "SELECT * FROM dokter WHERE id='" . $_GET['id'] . "'");
+    while ($row = mysqli_fetch_array($ambil)) {
+        $nama = $row['nama'];
+        $alamat = $row['alamat'];
+        $no_hp = $row['no_hp'];
+    }
+    ?>
+    <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
+    <?php
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +26,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dokter Poliklinik</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -43,6 +65,11 @@
                                 Pasien
                             </a>
                         </li>
+                        <li>
+                            <a class="dropdown-item" href="obat.php?page=obat">
+                                Obat
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item">
@@ -52,11 +79,11 @@
                 </li>
             </ul>
         </div>
-        <!-- Add the "Logout" button to the top-right -->
+       
         <?php
         session_start();
         if (isset($_SESSION['username'])) {
-            echo '<a class="btn btn-danger" href="logout.php">Logout</a>';
+            echo '<a class="btn btn-logout" href="logout.php">Logout</a>';
         }
         ?>
     </div>

@@ -9,13 +9,17 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-    <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="#">
             Sistem Informasi Poliklinik
         </a>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
         </button>
-        
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -25,7 +29,6 @@
                 </li>
             </ul>
         </div>
-
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link" href="registrasiuser.php">Register</a>
@@ -41,7 +44,7 @@
     <div class="row justify-content-center mt-5">
         <div class="col-md-6">
             <div class="card">
-                <div class="card-header">Registration</div>
+                <div class="card-header">Pendaftaran</div>
                 <div class="card-body">
                     <?php
                     include("koneksi.php"); // Include the database connection file
@@ -53,7 +56,7 @@
 
                         // Check if the password and confirm password match
                         if ($password !== $confirmPassword) {
-                            $registrationError = "Password and confirm password do not match.";
+                            $registrationError = "Password dan Konfirmasi Password tidak sama";
                         } else {
                             // Check if the username is already taken
                             $checkUsernameQuery = "SELECT * FROM user WHERE username = ?";
@@ -63,7 +66,7 @@
                             $result = $stmt->get_result();
 
                             if ($result->num_rows > 0) {
-                                $registrationError = "Username is already taken.";
+                                $registrationError = "Username tidak tersedia";
                             } else {
                                 // Hash the password
                                 $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
@@ -74,9 +77,9 @@
                                 $stmt->bind_param("ss", $username, $hashedPassword);
 
                                 if ($stmt->execute()) {
-                                    $registrationSuccess = "Registration successful. You can now log in.";
+                                    $registrationSuccess = "Registrasi Berhasil. Silahkan Login.";
                                 } else {
-                                    $registrationError = "Registration failed. Please try again.";
+                                    $registrationError = "Registrasi Gagal. Silahkan Coba Lagi.";
                                 }
                             }
                         }
@@ -92,10 +95,10 @@
                             <input type="password" class="form-control" id="password" name="password" required>
                         </div>
                         <div class="mb-3">
-                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <label for="confirmPassword" class="form-label">Konfirmasi Password</label>
                             <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
                         </div>
-                        <button type="submit" class="btn btn-primary">Register</button>
+                        <button type="submit" class="btn btn-primary">Daftar</button>
                     </form>
                     <?php if (isset($registrationSuccess)) { ?>
                         <p class="text-success"><?php echo $registrationSuccess; ?></p>
@@ -106,6 +109,11 @@
                 </div>
             </div>
             <div class="mt-3 text-center">
-                <p>Already have an account? <a href="loginUser.php">Login here</a></p>
+                <p>Sudah pernah mendaftar?<a href="loginUser.php">Masuk Disini</a></p>
             </div>
-        </div
+        </div>
+    </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>

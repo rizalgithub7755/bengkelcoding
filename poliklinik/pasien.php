@@ -1,3 +1,23 @@
+<?php
+session_start();
+include 'koneksi.php';
+
+$nama = '';
+$alamat = '';
+$no_hp = '';
+
+if (isset($_GET['id'])) {
+    $ambil = mysqli_query($mysqli, "SELECT * FROM pasien WHERE id='" . $_GET['id'] . "'");
+    while ($row = mysqli_fetch_array($ambil)) {
+        $nama = $row['nama'];
+        $alamat = $row['alamat'];
+        $no_hp = $row['no_hp'];
+    }
+    ?>
+    <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
+    <?php
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,8 +35,10 @@
         <button class="navbar-toggler"
                 type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarNavDropdown"
-                aria-controls="navbarNavDropdown" aria-expanded="false"
+                aria-controls="navbarNavDropdown"
+                aria-expanded="false"
                 aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
@@ -50,6 +72,7 @@
                 </li>
             </ul>
         </div>
+        
         <!-- Add the "Logout" button to the top-right -->
         <?php
         session_start();
@@ -89,7 +112,7 @@
             <input type="text" class="form-control" name="nama" id="inputNama" placeholder="Nama Pasien" value="<?php echo $nama ?>">
         </div>
         <div class="col">
-            <label for "inputAlamat" class="form-label fw-bold">
+            <label for="inputAlamat" class="form-label fw-bold">
                 Alamat
             </label>
             <input type="text" class="form-control" name="alamat" id="inputAlamat" placeholder="Alamat" value="<?php echo $alamat ?>">
@@ -177,6 +200,6 @@ if (isset($_GET['aksi'])) {
 }
 ?>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 </html>
